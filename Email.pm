@@ -24,7 +24,7 @@ use Email::Address;
 
 %EXPORT_TAGS = ();
 
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 
 # No preloads
@@ -38,7 +38,7 @@ Data::Validate::Email - common email validation methods
 
 =head1 SYNOPSIS
 
-  use Data::Validate::Email wq(is_email is_email_rfc822);
+  use Data::Validate::Email qw(is_email is_email_rfc822);
   
   if(is_email($suspect)){
   	print "Looks like an email address\n";
@@ -46,7 +46,7 @@ Data::Validate::Email - common email validation methods
   	print "Doesn't much look like an email address, but passes rfc822\n";
   } else {
   	print "Not an email address\n";
-  
+  }
 
   # or as an object
   my $v = Data::Validate::Email->new();
