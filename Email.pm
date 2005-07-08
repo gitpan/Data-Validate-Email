@@ -7,6 +7,7 @@ require Exporter;
 use AutoLoader 'AUTOLOAD';
 
 use Email::Address;
+use Data::Validate::Domain;
 
 @ISA = qw(Exporter);
 
@@ -24,7 +25,7 @@ use Email::Address;
 
 %EXPORT_TAGS = ();
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 
 # No preloads
@@ -154,9 +155,18 @@ sub is_email{
 	
 	return unless defined($value);
 	
-	my($address) = $value =~ /^\s*([a-z0-9_\-\.]+\@[a-z0-9_\-\.]+\.[a-z]+)\s*$/i;
+	my @parts = split(/\@/, $value);
+	return unless scalar(@parts) == 2;
 	
-	return $address;
+	my($user) = is_username($parts[0]);
+	return unless defined($user);
+	return unless $user eq $parts[0];
+	
+	my $domain = is_domain($parts[1]);
+	return unless defined($domain);
+	return unless $domain eq $parts[1];
+
+	return $user . '@' . $domain;
 }
 
 
@@ -257,6 +267,9 @@ Returns the untainted domain on success, undef on failure.
 The function does not make any attempt to check whether a domain is 
 actually exists. It only looks to see that the format is appropriate.
 
+As of version 0.03, this is a direct pass-through to Neil Neely's
+Data::Validate::Domain::is_domain() function.
+
 =back
 
 =cut
@@ -267,9 +280,7 @@ sub is_domain{
 	
 	return unless defined($value);
 	
-	my($domain) = $value =~ /^([a-z0-9\.\-]+\.[a-z]+)$/i;
-	
-	return $domain;
+	return Data::Validate::Domain::is_domain($value);
 }
 
 

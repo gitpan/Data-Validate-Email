@@ -1,5 +1,11 @@
 Revision history for Perl extension Data::Validate::Email.
 
+0.03  20050708
+	- changed is_email to use is_username and is_domain to do its work
+	they previously had different behaviors when it came to underscores in a domain name.
+	Thanks to Doran for the bug report.
+	- changed is_domain to be a passthrough to Neil Neely's Data::Validate::Domain module
+
 0.02  20050420
 	- fixed error in the POD examples.  Thanks to Philip McCarthy for the bug report.
 

@@ -7,7 +7,8 @@ WriteMakefile(
     'DISTNAME'		=>	'Data-Validate-Email',
     'AUTHOR'		=>	'Richard Sonnen (sonnen@richardsonnen.com)',
     'PREREQ_PM'		=>	{
-    				'Email::Address'	=>	0,
+    				'Email::Address'			=>	0,
+    				'Data::Validate::Domain'	=>	0,
     				},
     'dist'		=>	{
     				'COMPRESS'	=>	'gzip -9f',
