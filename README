@@ -2,7 +2,7 @@ NAME
     Data::Validate::Email - common email validation methods
 
 SYNOPSIS
-      use Data::Validate::Email wq(is_email is_email_rfc822);
+      use Data::Validate::Email qw(is_email is_email_rfc822);
   
       if(is_email($suspect)){
             print "Looks like an email address\n";
@@ -10,7 +10,8 @@ SYNOPSIS
             print "Doesn't much look like an email address, but passes rfc822\n";
       } else {
             print "Not an email address\n";
-  
+      }
+
       # or as an object
       my $v = Data::Validate::Email->new();
   
@@ -29,7 +30,7 @@ DESCRIPTION
 
 FUNCTIONS
     new - constructor for OO usage
-          new();
+          new([\%opts]);
 
         *Description*
             Returns a Data::Validator::Email object. This lets you access
@@ -38,7 +39,10 @@ FUNCTIONS
             Data::Validate::Email::function_name() format.
 
         *Arguments*
-            None
+            An optional hash reference is retained and passed on to other
+            function calls in the Data::Validate module series. This module
+            does not utilize the extra data, but some child calls do. See
+            Data::Validate::Domain for an example.
 
         *Returns*
             Returns a Data::Validate::Email object
@@ -70,6 +74,11 @@ FUNCTIONS
             This function does not make any attempt to check whether an
             address is genuinely deliverable. It only looks to see that the
             format is email-like.
+
+            The function accepts an optional hash reference as a second
+            argument to change the validation behavior. It is passed on
+            unchanged to Neil Neely's Data::Validate::Domain::is_domain()
+            function. See that module's documentation for legal values.
 
     is_email_rfc822 - does the value look like an RFC 822 address?
           is_email_rfc822($value);
@@ -121,6 +130,14 @@ FUNCTIONS
             The function does not make any attempt to check whether a domain
             is actually exists. It only looks to see that the format is
             appropriate.
+
+            As of version 0.03, this is a direct pass-through to Neil
+            Neely's Data::Validate::Domain::is_domain() function.
+
+            The function accepts an optional hash reference as a second
+            argument to change the validation behavior. It is passed on
+            unchanged to Neil Neely's Data::Validate::Domain::is_domain()
+            function. See that module's documentation for legal values.
 
     is_username - does the value look like a username?
           is_username($value);

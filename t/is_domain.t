@@ -14,7 +14,7 @@ use Data::Validate::Email qw(is_domain);
 
 my $t = ExtUtils::TBone->typical();
 
-$t->begin(10);
+$t->begin(12);
 $t->msg("testing is_domain...");
 
 # valid
@@ -30,7 +30,9 @@ $t->ok(!defined(is_domain('host')), "bad: host");
 $t->ok(!defined(is_domain('sonnen@frii.com')), 'bad: sonnen@frii.com');
 $t->ok(!defined(is_domain('test dot.com')), "bad: test dot.com");
 
-
+# test passthrough to Data::Validate::Domain
+$t->ok(defined(is_domain('com', {domain_allow_single_label => 1})), 'single-label test');
+$t->ok(defined(is_domain('bob.foo', {domain_private_tld => {foo => 1}})), 'private TLD test');
 
 # as an object
 my $v = Data::Validate::Email->new();

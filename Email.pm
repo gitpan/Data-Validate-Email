@@ -25,7 +25,7 @@ use Data::Validate::Domain;
 
 %EXPORT_TAGS = ();
 
-$VERSION = '0.03';
+$VERSION = '0.04';
 
 
 # No preloads
@@ -77,7 +77,7 @@ The value to test is always the first (and often only) argument.
 
 =item B<new> - constructor for OO usage
 
-  new();
+  new([\%opts]);
 
 =over 4
 
@@ -89,7 +89,9 @@ Data::Validate::Email::function_name() format.
 
 =item I<Arguments>
 
-None
+An optional hash reference is retained and passed on to other function calls in the
+Data::Validate module series.  This module does not utilize the extra data,
+but some child calls do.  See Data::Validate::Domain for an example.
 
 =item I<Returns>
 
@@ -101,8 +103,9 @@ Returns a Data::Validate::Email object
 
 sub new{
 	my $class = shift;
+	my %self = @_;
 	
-	return bless {}, $class;
+	return bless \%self, ref($class) || $class;
 }
 
 # -------------------------------------------------------------------------------
@@ -145,6 +148,11 @@ Returns the untainted address on success, undef on failure.
 This function does not make any attempt to check whether an address is 
 genuinely deliverable. It only looks to see that the format is email-like.
 
+The function accepts an optional hash reference as a second argument to 
+change the validation behavior.  It is passed on unchanged to Neil Neely's
+Data::Validate::Domain::is_domain() function.  See that module's documentation
+for legal values.
+
 =back
 
 =cut
@@ -155,14 +163,16 @@ sub is_email{
 	
 	return unless defined($value);
 	
+	my $opt = (defined $self) ? $self : (shift);
+	
 	my @parts = split(/\@/, $value);
 	return unless scalar(@parts) == 2;
 	
-	my($user) = is_username($parts[0]);
+	my($user) = is_username($parts[0], $opt);
 	return unless defined($user);
 	return unless $user eq $parts[0];
 	
-	my $domain = is_domain($parts[1]);
+	my $domain = is_domain($parts[1], $opt);
 	return unless defined($domain);
 	return unless $domain eq $parts[1];
 
@@ -270,6 +280,11 @@ actually exists. It only looks to see that the format is appropriate.
 As of version 0.03, this is a direct pass-through to Neil Neely's
 Data::Validate::Domain::is_domain() function.
 
+The function accepts an optional hash reference as a second argument to 
+change the validation behavior.  It is passed on unchanged to Neil Neely's
+Data::Validate::Domain::is_domain() function.  See that module's documentation
+for legal values.
+
 =back
 
 =cut
@@ -280,7 +295,9 @@ sub is_domain{
 	
 	return unless defined($value);
 	
-	return Data::Validate::Domain::is_domain($value);
+	my $opt = (defined $self) ? $self : (shift);
+	
+	return Data::Validate::Domain::is_domain($value, $opt);
 }
 
 
